@@ -2,11 +2,39 @@
 
 [English](README.md) / [Türkçe](README.tr.md)
 
-LimitsHalo is an unofficial Windows taskbar widget for remaining Codex 5-hour and weekly limits. It reads the signed-in Codex Desktop session through the local Codex app-server. The tray icon opens settings and offers refresh and quit. This source release is `0.1.0-beta`.
+**Keep your Codex usage limits visible on the Windows taskbar.**
+
+LimitsHalo shows your remaining **5-hour and weekly Codex limits** directly on the taskbar, so you don't need to open Codex or manually check your usage.
+
+It uses your existing signed-in Codex Desktop session locally. **No API key is required.**
+
+## Screenshots
+
+![Normal widget and settings](docs/screenshots/settings-normal.png)
+![Compact widget and settings](docs/screenshots/settings-compact.png)
+![Turkish taskbar widget](docs/screenshots/widget-turkish.png)
+
+## Download
+
+Download the latest Windows installer from [GitHub Releases](https://github.com/arden-works/limits-halo/releases).
+
+> The installer is currently unsigned, so Windows SmartScreen may display a warning.
+
+## How to use
+
+- Your remaining 5-hour and weekly limits are shown directly on the Windows taskbar.
+- Click the Codex icon to open, focus, or minimize Codex.
+- Open the tray menu to access **Settings**, refresh usage, manage startup behavior, or quit LimitsHalo.
+- Settings are stored locally on your computer.
+
+## Requirements
+
+- Windows 11 (verified); Windows 10 has not been verified
+- Codex Desktop installed and signed in
 
 ## Run from source
 
-Use Windows 10 or 11 and Python 3.10 or newer:
+Python 3.10 or newer is required.
 
 ```powershell
 python -m venv .venv
@@ -14,12 +42,19 @@ python -m venv .venv
 .\.venv\Scripts\python.exe main.py
 ```
 
-Codex Desktop must be installed and signed in for live limits. On first run, `config.example.json` is copied to a local, ignored `config.json`. Run `main.py --quit` to close the widget. `main.py --mock` and `main.py --test` display visibly marked example data; `--test` also lets right-click cycle sample percentages.
+On first run, `config.example.json` is copied to the local, ignored `config.json` if it does not exist. Run `main.py --quit` to close the widget. For development, `--mock` and `--test` show visibly marked example data; `--test` also lets you cycle sample percentages with a right-click.
 
-## Limits
+## Known limitations
 
-The widget supports the primary horizontal taskbar. It never estimates a limit that Codex does not provide. Notification animation depends on Windows' local notification database and may stop working if that database changes. Separate Windows 10, multi-monitor, and clean-machine behavior has not been verified. All-time token usage is not requested or displayed.
+- Currently targets the primary horizontal Windows taskbar.
+- Windows 10 and multi-monitor behavior have not been fully verified.
+- LimitsHalo only displays limits provided by Codex; it does not estimate missing usage data.
+- Notification animation depends on Windows' local notification data.
 
 ## License
 
-LimitsHalo source code is licensed under the [Apache License 2.0](LICENSE). Copyright (c) 2026 Arden Works; see [NOTICE](NOTICE). See [third-party notices](THIRD_PARTY_NOTICES.md) for dependencies. Codex names and marks belong to OpenAI; this project is not affiliated with OpenAI.
+LimitsHalo source code is licensed under the [Apache License 2.0](LICENSE). Copyright (c) 2026 Arden Works; see [NOTICE](NOTICE).
+
+See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for third-party components and trademarks.
+
+LimitsHalo is an independent project and is not affiliated with or endorsed by OpenAI.

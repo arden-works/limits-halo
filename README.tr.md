@@ -2,11 +2,39 @@
 
 [English](README.md) / [Türkçe](README.tr.md)
 
-LimitsHalo, kalan Codex 5 saatlik ve haftalık limitlerini gösteren, resmî olmayan bir Windows görev çubuğu widget'ıdır. Oturum açılmış Codex Desktop oturumundaki verileri yerel Codex app-server üzerinden okur. Bildirim alanı simgesi ayarları açar; yenileme ve çıkış seçeneklerini sunar. Bu kaynak sürümü `0.1.0-beta`dır.
+**Codex kullanım limitlerini doğrudan Windows görev çubuğunda gör.**
+
+LimitsHalo, kalan **5 saatlik ve haftalık Codex limitlerini** görev çubuğunda gösterir. Limitlerini görmek için Codex'i açmana veya kullanımını ayrıca kontrol etmene gerek kalmaz.
+
+Mevcut Codex Desktop oturumunu yerel olarak kullanır. **API anahtarı gerekmez.**
+
+## Ekran görüntüleri
+
+![Normal widget ve ayarlar](docs/screenshots/settings-normal.png)
+![Kompakt widget ve ayarlar](docs/screenshots/settings-compact.png)
+![Türkçe görev çubuğu widget'ı](docs/screenshots/widget-turkish.png)
+
+## İndir
+
+En güncel Windows kurulum dosyasını [GitHub Releases](https://github.com/arden-works/limits-halo/releases) sayfasından indirin.
+
+> Kurulum dosyası şu anda dijital olarak imzalanmamıştır; Windows SmartScreen uyarı gösterebilir.
+
+## Kullanım
+
+- Kalan 5 saatlik ve haftalık limitlerin doğrudan Windows görev çubuğunda görünür.
+- Codex simgesine tıklayarak Codex'i açabilir, öne getirebilir veya simge durumuna küçültebilirsin.
+- Bildirim alanı menüsünden **Ayarlar**'a, kullanım verisini yenilemeye, başlangıçta çalıştırma seçeneğine ve LimitsHalo'dan çıkışa erişebilirsin.
+- Ayarların bilgisayarında yerel olarak tutulur.
+
+## Gereksinimler
+
+- Windows 11 (doğrulandı); Windows 10 henüz doğrulanmadı
+- Codex Desktop kurulu ve oturum açılmış olmalı
 
 ## Kaynak koddan çalıştırma
 
-Windows 10 veya 11 ve Python 3.10 ya da daha yeni bir sürüm kullanın:
+Python 3.10 veya daha yeni bir sürüm gereklidir.
 
 ```powershell
 python -m venv .venv
@@ -14,12 +42,19 @@ python -m venv .venv
 .\.venv\Scripts\python.exe main.py
 ```
 
-Canlı limitleri görmek için Codex Desktop kurulu olmalı ve oturum açılmış olmalıdır. İlk çalıştırmada `config.example.json`, yerel ve Git tarafından yok sayılan `config.json` dosyasına kopyalanır. Widget'ı kapatmak için `main.py --quit` komutunu çalıştırın. `main.py --mock` ve `main.py --test`, örnek verileri belirgin biçimde işaretleyerek gösterir; `--test` ayrıca sağ tıklamayla örnek yüzdeler arasında geçiş yapmanızı sağlar.
+İlk çalıştırmada `config.example.json`, dosya henüz yoksa yerel ve Git tarafından yok sayılan `config.json` dosyasına kopyalanır. Widget'ı kapatmak için `main.py --quit` komutunu çalıştırın. Geliştirme amaçlı `--mock` ve `--test` seçenekleri örnek verileri belirgin biçimde işaretler; `--test` ayrıca sağ tıklamayla örnek yüzdeler arasında geçiş yapmanızı sağlar.
 
-## Sınırlar
+## Bilinen sınırlamalar
 
-Widget, birincil yatay görev çubuğunu destekler. Codex'in sağlamadığı bir limit için tahmini değer göstermez. Bildirim animasyonu Windows'un yerel bildirim veritabanına bağlıdır ve bu veritabanı değişirse çalışmayabilir. Windows 10, çoklu monitör ve temiz bir makinedeki davranış ayrı ayrı doğrulanmamıştır. Tüm zamanlar token kullanımı sorgulanmaz veya gösterilmez.
+- Şu anda birincil yatay Windows görev çubuğunu hedefler.
+- Windows 10 ve çoklu monitör davranışı henüz tam olarak doğrulanmadı.
+- LimitsHalo yalnızca Codex'in sağladığı limitleri gösterir; eksik kullanım verisini tahmin etmez.
+- Bildirim animasyonu Windows'un yerel bildirim verilerine bağlıdır.
 
 ## Lisans
 
-LimitsHalo kaynak kodu [Apache License 2.0](LICENSE) kapsamında lisanslanmıştır. Copyright (c) 2026 Arden Works; bkz. [NOTICE](NOTICE). Bağımlılıklar için [üçüncü taraf bildirimlerine](THIRD_PARTY_NOTICES.md) bakın. Codex adı ve işaretleri OpenAI'a aittir; bu proje OpenAI ile bağlantılı değildir.
+LimitsHalo kaynak kodu [Apache License 2.0](LICENSE) kapsamında lisanslanmıştır. Copyright (c) 2026 Arden Works; bkz. [NOTICE](NOTICE).
+
+Üçüncü taraf bileşenler ve ticari markalar için [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) dosyasına bakın.
+
+LimitsHalo bağımsız bir projedir; OpenAI ile bağlantılı değildir ve OpenAI tarafından desteklenmemektedir.
