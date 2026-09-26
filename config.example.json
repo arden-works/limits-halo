@@ -1,0 +1,19 @@
+{
+  "offset_x": 0,
+  "opacity": 0.96,
+  "show_countdown": true,
+  "show_widget": true,
+  "show_notification_pulse": true,
+  "clock_format": 24,
+  "font_scale": 100,
+  "reset_display": "in",
+  "compact_view": false,
+  "notification_color": "amber",
+  "language": "en",
+  "show_five_hour": true,
+  "show_weekly": true,
+  "width": 600,
+  "safe_right_x": null,
+  "mock_five_hour_percent": 72,
+  "mock_weekly_percent": 31
+}
