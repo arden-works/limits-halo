@@ -9,3 +9,15 @@ Automated tests, source and local PyInstaller startup/quit smoke checks, 240 px 
 The PyInstaller configuration excludes unused GPL-only Qt components before collection, including Qt Virtual Keyboard. The local bundle inventory and dependency licenses are recorded in [third-party notices](THIRD_PARTY_NOTICES.md).
 
 This is an unofficial community project, unaffiliated with OpenAI.
+
+## Türkçe
+
+Bu kaynak sürümü, kalan Codex 5 saatlik ve haftalık limitlerini birincil yatay Windows görev çubuğunda gösterir. Canlı veri için Codex Desktop oturumunun açık olması gerekir. `--mock` ve `--test` örnek değerleri belirgin biçimde işaretler.
+
+Yerel ayarlar, yalnızca dosya yoksa `config.example.json` üzerinden oluşturulan ve Git tarafından yok sayılan `config.json` içinde tutulur. Kapanışta sağlayıcı kapatılmadan önce çalışan işler beklenir; `--quit`, config geçersiz olsa da çalışır.
+
+Otomatik testler; kaynak kod ve yerel PyInstaller açılış/kapanış kontrolleri; 240 px kompakt yerleşim kontrolleri; Türkçe/İngilizce ayarların görsel kontrolleri geliştirme yapılan Windows 11 makinesinde geçti. Temiz Windows kurulumu, ayrı Windows 10 ve çoklu monitör kontrolleri açık. Yerel PyInstaller build'i yalnızca paketlenen bileşenleri ve lisansları doğrulamak için kullanıldı; installer ve binary çıktıları bu kaynak sürümüne dahil değil.
+
+PyInstaller yapılandırması, Qt Virtual Keyboard dahil kullanılmayan yalnızca GPL lisanslı Qt bileşenlerini paketleme öncesinde dışarıda bırakır. Yerel paket envanteri ve bağımlılık lisansları [üçüncü taraf bildirimlerinde](THIRD_PARTY_NOTICES.md) yer alır.
+
+Bu, OpenAI ile bağlantısı olmayan resmî olmayan bir topluluk projesidir.

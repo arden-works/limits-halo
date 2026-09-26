@@ -1,5 +1,7 @@
 # LimitsHalo
 
+[English](README.md) / [Türkçe](README.tr.md)
+
 LimitsHalo is an unofficial Windows taskbar widget for remaining Codex 5-hour and weekly limits. It reads the signed-in Codex Desktop session through the local Codex app-server. The tray icon opens settings and offers refresh and quit. This source release is `0.1.0-beta`.
 
 ## Run from source
