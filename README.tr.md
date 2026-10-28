@@ -26,6 +26,7 @@ En güncel Windows kurulum dosyasını [GitHub Releases](https://github.com/arde
 - Codex simgesine tıklayarak Codex'i açabilir, öne getirebilir veya simge durumuna küçültebilirsin.
 - Bildirim alanı menüsünden **Ayarlar**'a, kullanım verisini yenilemeye, başlangıçta çalıştırma seçeneğine ve LimitsHalo'dan çıkışa erişebilirsin.
 - Ayarların bilgisayarında yerel olarak tutulur.
+- Açık renk görev çubuğunda koyu yazı, çizgi ve barlar için Ayarlar → **Görev çubuğu → Açık** seçeneğini kullan. **Koyu** seçeneği mevcut görünümü korur. Bu seçim manueldir ve anında kaydedilir. Bu ayar güncel kaynak kodda bulunur; yayımlanmış `v0.1.0-beta` kurulum paketi henüz bu ayarı içermez.
 
 ## Gereksinimler
 

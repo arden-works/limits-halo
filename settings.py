@@ -27,6 +27,7 @@ class Config:
     font_scale: int = 100
     reset_display: str = "in"
     compact_view: bool = False
+    taskbar_theme: str = "dark"
     notification_color: str = "amber"
     language: str = "tr"
     show_five_hour: bool = True
@@ -67,6 +68,8 @@ class Config:
             raise ValueError("font_scale must be 85, 100 or 115")
         if cfg.reset_display not in ("in", "at"):
             raise ValueError("reset_display must be in or at")
+        if cfg.taskbar_theme not in ("dark", "light"):
+            raise ValueError("taskbar_theme must be dark or light")
         if cfg.notification_color not in NOTIFICATION_COLORS:
             raise ValueError("Unknown notification_color")
         if cfg.safe_right_x is not None and (type(cfg.safe_right_x) is not int or cfg.safe_right_x < 1):

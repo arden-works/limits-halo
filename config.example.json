@@ -8,6 +8,7 @@
   "font_scale": 100,
   "reset_display": "in",
   "compact_view": false,
+  "taskbar_theme": "dark",
   "notification_color": "amber",
   "language": "en",
   "show_five_hour": true,

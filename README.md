@@ -26,6 +26,7 @@ Download the latest Windows installer from [GitHub Releases](https://github.com/
 - Click the Codex icon to open, focus, or minimize Codex.
 - Open the tray menu to access **Settings**, refresh usage, manage startup behavior, or quit LimitsHalo.
 - Settings are stored locally on your computer.
+- In Settings, set **Taskbar** to **Light** for dark text, lines, and bars on a light taskbar, or **Dark** for the original appearance. This is a manual choice and is saved immediately. This setting is available in the current source code; the published `v0.1.0-beta` installer does not include it yet.
 
 ## Requirements
 

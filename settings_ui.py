@@ -125,30 +125,34 @@ class SettingsWindow(QDialog):
         self.view = RadioChoices(((False, "normal"), (True, "compact")))
         layout.addWidget(self.view_label, 3, 0)
         layout.addWidget(self.view, 3, 1)
+        self.taskbar_theme_label = QLabel()
+        self.taskbar_theme = RadioChoices((("dark", "taskbar_dark"), ("light", "taskbar_light")))
+        layout.addWidget(self.taskbar_theme_label, 4, 0)
+        layout.addWidget(self.taskbar_theme, 4, 1)
         self.reset_label = QLabel()
         self.reset = RadioChoices((("in", "remaining"), ("at", "clock_time")))
-        layout.addWidget(self.reset_label, 4, 0)
-        layout.addWidget(self.reset, 4, 1)
+        layout.addWidget(self.reset_label, 5, 0)
+        layout.addWidget(self.reset, 5, 1)
         self.clock_label = QLabel()
         self.clock = RadioChoices(((12, "hours_12"), (24, "hours_24")))
-        layout.addWidget(self.clock_label, 5, 0)
-        layout.addWidget(self.clock, 5, 1)
+        layout.addWidget(self.clock_label, 6, 0)
+        layout.addWidget(self.clock, 6, 1)
         self.font_label = QLabel()
         self.font_size = RadioChoices(((85, "font_small"), (100, "font_default"),
                                        (115, "font_large")), columns=3, cell_width=160)
-        layout.addWidget(self.font_label, 6, 0)
-        layout.addWidget(self.font_size, 6, 1)
-        self._separator(layout, 7)
+        layout.addWidget(self.font_label, 7, 0)
+        layout.addWidget(self.font_size, 7, 1)
+        self._separator(layout, 8)
 
         self.color_label = QLabel()
         self.color = RadioChoices(tuple((key, key) for key in NOTIFICATION_COLORS) +
                                   ((None, "notification_none"),))
-        layout.addWidget(self.color_label, 8, 0, Qt.AlignmentFlag.AlignTop)
-        layout.addWidget(self.color, 8, 1)
-        self._separator(layout, 9)
+        layout.addWidget(self.color_label, 9, 0, Qt.AlignmentFlag.AlignTop)
+        layout.addWidget(self.color, 9, 1)
+        self._separator(layout, 10)
 
         self.startup = QCheckBox()
-        layout.addWidget(self.startup, 10, 1)
+        layout.addWidget(self.startup, 11, 1)
         footer = QWidget()
         footer_layout = QVBoxLayout(footer)
         footer_layout.setContentsMargins(0, 8, 0, 0)
@@ -166,9 +170,10 @@ class SettingsWindow(QDialog):
         self.project_links.setTextInteractionFlags(Qt.TextInteractionFlag.LinksAccessibleByMouse)
         footer_layout.addWidget(self.project_credit)
         footer_layout.addWidget(self.project_links)
-        layout.addWidget(footer, 11, 0, 1, 2)
+        layout.addWidget(footer, 12, 0, 1, 2)
         for label in (self.language_label, self.limits_label, self.view_label,
-                      self.reset_label, self.clock_label, self.font_label, self.color_label):
+                      self.taskbar_theme_label, self.reset_label, self.clock_label,
+                      self.font_label, self.color_label):
             label.setFixedWidth(150)
 
         self.sync(controls.controller.config)
@@ -179,6 +184,8 @@ class SettingsWindow(QDialog):
         self.week.toggled.connect(lambda value: controls.change_setting("show_weekly", value))
         self.view.group.idClicked.connect(
             lambda _: controls.change_setting("compact_view", self.view.currentData()))
+        self.taskbar_theme.group.idClicked.connect(
+            lambda _: controls.change_setting("taskbar_theme", self.taskbar_theme.currentData()))
         self.reset.group.idClicked.connect(
             lambda _: controls.change_reset(self.reset.currentData()))
         self.clock.group.idClicked.connect(
@@ -210,6 +217,7 @@ class SettingsWindow(QDialog):
             control.setChecked(value)
             control.blockSignals(False)
         choices = ((self.language, config.language), (self.view, config.compact_view),
+                   (self.taskbar_theme, config.taskbar_theme),
                    (self.reset, config.reset_display), (self.clock, config.clock_format),
                    (self.font_size, config.font_scale),
                    (self.color, config.notification_color if config.show_notification_pulse else None))
@@ -222,11 +230,12 @@ class SettingsWindow(QDialog):
         for target, key in ((self.language_label, "language"), (self.limits_label, "limits"),
                             (self.five, "five"), (self.week, "week"),
                             (self.view_label, "view"), (self.reset_label, "reset_mode"),
+                            (self.taskbar_theme_label, "taskbar_theme"),
                             (self.clock_label, "clock_format"), (self.font_label, "font_size"),
                             (self.color_label, "color"),
                             (self.startup, "startup")):
             target.setText(tr(key, language))
-        for choices in (self.view, self.reset, self.clock, self.font_size, self.color):
+        for choices in (self.view, self.taskbar_theme, self.reset, self.clock, self.font_size, self.color):
             choices.setLabels(language)
 
 

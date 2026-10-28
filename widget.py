@@ -17,6 +17,20 @@ from i18n import tr
 
 TEXT = QColor("#f7fbff")
 MUTED = QColor("#dbe6f2")
+WIDGET_PALETTES = {
+    "dark": {
+        "text": TEXT, "muted": MUTED, "label": QColor("#e9f5ff"),
+        "icon": "#ffffff", "surface": QColor(20, 20, 20),
+        "divider": QColor(255, 255, 255, 32), "track": QColor(255, 255, 255, 68),
+        "status": QColor("#cbb387"),
+    },
+    "light": {
+        "text": QColor("#17212c"), "muted": QColor("#3b4857"), "label": QColor("#26364a"),
+        "icon": "#202b38", "surface": QColor(255, 255, 255),
+        "divider": QColor(20, 30, 40, 60), "track": QColor(20, 30, 40, 65),
+        "status": QColor("#80643b"),
+    },
+}
 
 
 @lru_cache(maxsize=72)
@@ -42,13 +56,13 @@ def countdown_width(caption, font_scale=100):
             + QFontMetricsF(font(15, font_scale=font_scale)).horizontalAdvance(caption[len(prefix):]))
 
 
-def countdown_text(painter, x, y, height, caption, font_scale=100):
+def countdown_text(painter, x, y, height, caption, font_scale=100, color=MUTED):
     prefix = caption_prefix(caption)
     prefix_width = QFontMetricsF(font(11, font_scale=font_scale)).horizontalAdvance(prefix)
     if prefix:
-        text(painter, (x, y, prefix_width + 1, height), prefix, MUTED, 11, font_scale=font_scale)
+        text(painter, (x, y, prefix_width + 1, height), prefix, color, 11, font_scale=font_scale)
     text(painter, (x + prefix_width, y, countdown_width(caption, font_scale) - prefix_width + 1, height),
-         caption[len(prefix):], MUTED, 15, font_scale=font_scale)
+         caption[len(prefix):], color, 15, font_scale=font_scale)
 
 
 def caption_prefix(caption):
@@ -68,12 +82,14 @@ def reset_caption(reset_at, now, mode, display, clock_format, compact=False, lan
     return format_reset_display(reset_at, now, mode, display, clock_format, compact, language)
 
 
-def bar(painter, x, y, width, percent, height=4):
+def bar(painter, x, y, width, percent, height=4, taskbar_theme="dark"):
     painter.setPen(Qt.PenStyle.NoPen)
-    painter.setBrush(QColor(255, 255, 255, 68))
+    painter.setBrush(WIDGET_PALETTES[taskbar_theme]["track"])
     painter.drawRoundedRect(QRectF(x, y, width, height), height / 2, height / 2)
     if percent > 0:
         color = QColor(severity(percent))
+        if taskbar_theme == "light":
+            color = color.darker(170)
         fill_width = min(width, max(height, width * percent / 100))
         painter.setBrush(color)
         painter.drawRoundedRect(QRectF(x, y, fill_width, height), height / 2, height / 2)
@@ -90,9 +106,9 @@ def draw_mock_badge(painter, badge, label, badge_font):
     painter.drawText(badge, Qt.AlignmentFlag.AlignCenter, label)
 
 
-@lru_cache(maxsize=1)
-def logo_image():
-    """Render the supplied Codex silhouette in monochrome white."""
+@lru_cache(maxsize=2)
+def logo_image(taskbar_theme="dark"):
+    """Tint the supplied Codex silhouette for the chosen taskbar background."""
     root = ElementTree.parse(Path(__file__).parent / "assets" / "codex-icon.svg").getroot()
     image_node = root.find(".//{http://www.w3.org/2000/svg}image")
     if image_node is None:
@@ -103,16 +119,16 @@ def logo_image():
     image = QImage.fromData(b64decode(href.split(",", 1)[1]), "PNG")
     if image.isNull():
         raise ValueError("Could not decode codex-icon.svg image")
-    white = image.convertToFormat(QImage.Format.Format_ARGB32_Premultiplied)
-    painter = QPainter(white)
+    tinted = image.convertToFormat(QImage.Format.Format_ARGB32_Premultiplied)
+    painter = QPainter(tinted)
     painter.setCompositionMode(QPainter.CompositionMode.CompositionMode_SourceIn)
-    painter.fillRect(white.rect(), QColor("#ffffff"))
+    painter.fillRect(tinted.rect(), QColor(WIDGET_PALETTES[taskbar_theme]["icon"]))
     painter.end()
-    return white
+    return tinted
 
 
-def codex_glyph(painter, x, y, glow=0., glow_color="amber"):
-    image = logo_image()
+def codex_glyph(painter, x, y, glow=0., glow_color="amber", taskbar_theme="dark"):
+    image = logo_image(taskbar_theme)
     target = QRectF(x, y, 23, 23)
     painter.save()
     painter.setRenderHint(QPainter.RenderHint.SmoothPixmapTransform)
@@ -440,11 +456,13 @@ class LimitWidget(Overlay):
         p = QPainter(self)
         p.setRenderHint(QPainter.RenderHint.Antialiasing)
         w, h = self.width(), self.height()
+        palette = WIDGET_PALETTES[self.config.taskbar_theme]
         glass = QLinearGradient(0, 0, 0, h)
         alpha = self.config.opacity
-        glass.setColorAt(0, QColor(20, 20, 20, round((35 + 5 * self.hover) * alpha)))
-        glass.setColorAt(.48, QColor(20, 20, 20, round((30 + 5 * self.hover) * alpha)))
-        glass.setColorAt(1, QColor(20, 20, 20, round((35 + 5 * self.hover) * alpha)))
+        for position, base_alpha in ((0, 35), (.48, 30), (1, 35)):
+            surface = QColor(palette["surface"])
+            surface.setAlpha(round((base_alpha + 5 * self.hover) * alpha))
+            glass.setColorAt(position, surface)
         p.fillRect(self.rect(), glass)
         fade_start = max(0, w - 52)
         edge = QLinearGradient(fade_start, 0, w, 0)
@@ -460,8 +478,9 @@ class LimitWidget(Overlay):
             show_weekly=self.config.show_weekly, font_scale=self.config.font_scale)
         short = blocks[0].get("short", False)
         if not short or blocks[0].get("logo"):
-            codex_glyph(p, 12, (h - 23) / 2, self.logo_glow, self.config.notification_color)
-        p.setPen(QPen(QColor(255, 255, 255, 32), 1))
+            codex_glyph(p, 12, (h - 23) / 2, self.logo_glow, self.config.notification_color,
+                        self.config.taskbar_theme)
+        p.setPen(QPen(palette["divider"], 1))
         if not short or blocks[0].get("logo"):
             p.drawLine(43, 5, 43, h - 5)
         if stacked:
@@ -481,29 +500,31 @@ class LimitWidget(Overlay):
             label = (tr("five_short", self.config.language), tr("week_short", self.config.language))[i]
             row_y, row_h = block["row"]
             x, width = block["label"]
-            text(p, (x, row_y, width + 1, row_h), label, QColor("#e9f5ff"), 12, True,
+            text(p, (x, row_y, width + 1, row_h), label, palette["label"], 12, True,
                  font_scale=self.config.font_scale)
             percent = (self.state.five_hour_percent if i == 0 else self.state.weekly_percent) if self.state else None
             x, width = block["percent"]
-            text(p, (x, row_y, width, row_h), f"{percent:.0f}%" if percent is not None else "—", TEXT, 15, True,
+            text(p, (x, row_y, width, row_h), f"{percent:.0f}%" if percent is not None else "—", palette["text"], 15, True,
                  font_scale=self.config.font_scale)
             if "bar" in block:
                 x, width = block["bar"]
-                bar(p, x, row_y + row_h / 2 - 2, width, self.values[i])
+                bar(p, x, row_y + row_h / 2 - 2, width, self.values[i],
+                    taskbar_theme=self.config.taskbar_theme)
             if "countdown" in block:
                 x, width = block["countdown"]
                 if short:
-                    text(p, (x, row_y, width, row_h), short_caption(block["caption"]), MUTED,
+                    text(p, (x, row_y, width, row_h), short_caption(block["caption"]), palette["muted"],
                          11 if self.config.compact_view or self.config.reset_display == "at" or stacked else 15,
                          font_scale=self.config.font_scale)
                 else:
-                    countdown_text(p, x, row_y, row_h, block["caption"], self.config.font_scale)
+                    countdown_text(p, x, row_y, row_h, block["caption"], self.config.font_scale,
+                                   palette["muted"])
         if badge is not None:
             p.restore()
             draw_mock_badge(p, badge, mock_label, badge_font)
         if self.error:
             p.setPen(Qt.PenStyle.NoPen)
-            p.setBrush(QColor("#cbb387"))
+            p.setBrush(palette["status"])
             p.drawEllipse(QRectF(w - 6, 4, 3, 3))
 
     def minimum_width(self, height=48):
